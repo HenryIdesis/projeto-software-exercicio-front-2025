@@ -58,9 +58,12 @@ export default function PessoasApp() {
     setLoading(true);
     setError(null);
     try {
+      const accessToken = await getAccessTokenSilently({
+        authorizationParams: { audience: "https://viagens-api" }
+      });
       const res = await fetch(`${BASE_URL}/pessoas`,{
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       if (!res.ok) throw new Error(`Erro ao carregar: ${res.status}`);
@@ -84,11 +87,14 @@ export default function PessoasApp() {
     };
 
     try {
+      const accessToken = await getAccessTokenSilently({
+        authorizationParams: { audience: "https://viagens-api" }
+      });
       const res = await fetch(`${BASE_URL}/pessoas`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${accessToken}`,
          },
         body: JSON.stringify(dto)
       });
@@ -113,10 +119,13 @@ export default function PessoasApp() {
     if (!isAdmin) return;
     setError(null);
     try {
+      const accessToken = await getAccessTokenSilently({
+        authorizationParams: { audience: "https://viagens-api" }
+      });
       const res = await fetch(`${BASE_URL}/pessoas/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       if (!res.ok) {
