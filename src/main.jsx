@@ -12,7 +12,9 @@ const redirectUri =
 createRoot(document.getElementById('root')).render(
   <Auth0Provider
       domain="dev-z84f1bu1dhj686n4.us.auth0.com"
-      clientId="6Z3DLJOALa1qqdaKqN1zL2djZsJZ4UPB"
+      clientId="UWryLd7IqLiLkWTGKT0RLhymhNJEvJ64"
+      cacheLocation="localstorage"
+      useRefreshTokens
       authorizationParams={{
         audience: "https://viagens-api",
         redirect_uri: redirectUri
