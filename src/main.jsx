@@ -14,7 +14,6 @@ createRoot(document.getElementById('root')).render(
       domain="dev-z84f1bu1dhj686n4.us.auth0.com"
       clientId="UWryLd7IqLiLkWTGKT0RLhymhNJEvJ64"
       cacheLocation="localstorage"
-      useRefreshTokens
       authorizationParams={{
         audience: "https://viagens-api",
         redirect_uri: redirectUri
