@@ -12,7 +12,7 @@ const redirectUri =
 createRoot(document.getElementById('root')).render(
   <Auth0Provider
       domain="dev-z84f1bu1dhj686n4.us.auth0.com"
-      clientId="UWryLd7IqLiLkWTGKT0RLhymhNJEvJ64"
+      clientId="UWryLd7IqLiLKWTGKToRLhymhNJEvJ64"
       cacheLocation="localstorage"
       authorizationParams={{
         redirect_uri: redirectUri
