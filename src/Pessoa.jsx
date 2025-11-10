@@ -30,7 +30,9 @@ export default function PessoasApp() {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const accessToken = await getAccessTokenSilently();
+        const accessToken = await getAccessTokenSilently({
+          authorizationParams: { audience: "https://viagens-api" }
+        });
         setToken(accessToken);
       } catch (e) {
         console.error('Erro ao buscar token:', e);
