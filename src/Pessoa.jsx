@@ -3,9 +3,7 @@ import React, { useEffect, useState } from "react";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 
-const IP = "56.125.8.142";
-
-const BASE_URL = `http://${IP}:8080`;
+const BASE_URL = `/api`;
 
 
 export default function PessoasApp() {
@@ -24,11 +22,15 @@ export default function PessoasApp() {
     getAccessTokenSilently
   } = useAuth0();
 
+  const roles =
+    (user && (user["https://viagens-api/roles"] || user["https://viagens-api/roles/"]))
+      || [];
+  const isAdmin = Array.isArray(roles) && roles.includes("admin");
+
   useEffect(() => {
     const fetchToken = async () => {
       try {
         const accessToken = await getAccessTokenSilently();
-        console.log(accessToken)
         setToken(accessToken);
       } catch (e) {
         console.error('Erro ao buscar token:', e);
@@ -40,6 +42,11 @@ export default function PessoasApp() {
     }
   }, [isAuthenticated, getAccessTokenSilently]);
 
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      fetchPessoas();
+    }
+  }, [isAuthenticated, token]);
 
   if (!isAuthenticated) {
     return <LoginButton />;
@@ -100,6 +107,26 @@ export default function PessoasApp() {
     }
   }
 
+  async function handleDelete(id) {
+    if (!isAdmin) return;
+    setError(null);
+    try {
+      const res = await fetch(`${BASE_URL}/pessoas/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Erro ao excluir: ${res.status} ${text}`);
+      }
+      setPessoas(prev => prev.filter(p => p.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   return (
     <div className="min-h-screen p-6 bg-gray-50 font-sans">
 
@@ -112,7 +139,7 @@ export default function PessoasApp() {
 
 
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow p-6">
-        <h1 className="text-2xl font-bold mb-4">Stocks — criação e listagem</h1>
+        <h1 className="text-2xl font-bold mb-4">Viagens — criação e listagem</h1>
 
         <form onSubmit={handleCreate} className="space-y-3 mb-6">
 
@@ -125,7 +152,7 @@ export default function PessoasApp() {
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <input value={dataNascimento} onChange={e => setDataNascimento(e.target.value)} placeholder="Último valor" className="p-2 border rounded" />
+            <input value={dataNascimento} onChange={e => setDataNascimento(e.target.value)} placeholder="Modo de transporte" className="p-2 border rounded" />
           </div>
 
           <div className="flex gap-2">
@@ -154,6 +181,15 @@ export default function PessoasApp() {
                     </div>
                     <div className="text-right">
                       <div className="font-medium">{s.dataNascimento ?? "-"}</div>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDelete(s.id)}
+                          className="ml-3 px-3 py-1 text-white bg-red-600 rounded"
+                          title="Excluir (apenas admin)"
+                        >
+                          Excluir
+                        </button>
+                      )}
                     </div>
                   </div>
                 </li>

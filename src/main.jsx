@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')).render(
       domain="dev-z84f1bu1dhj686n4.us.auth0.com"
       clientId="6Z3DLJOALa1qqdaKqN1zL2djZsJZ4UPB"
       authorizationParams={{
-        audience: "https://dev-z84f1bu1dhj686n4.us.auth0.com/api/v2/",
+        audience: "https://viagens-api",
         redirect_uri: window.location.origin
       }}
     >
